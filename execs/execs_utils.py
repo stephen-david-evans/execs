@@ -3,12 +3,14 @@
 import re
 
 # regex pattern for converting camel to snake case
-camel_to_snake_pattern = re.compile(r"[A-Z](?:[A-Z]*(?![a-z])|[a-z]*)")
+camel_to_snake_pattern = re.compile(r"[0-9A-Z](?:[A-Z]*(?![a-z])|[a-z]*)")
 
 
-def camel_to_snake(x):
+def camel_to_snake(string):
     """Convert CamelCase input to snake_case output"""
-    return "_".join(g.lower() for g in camel_to_snake_pattern.findall(x))
+    if not any(x.isupper() for x in string):
+        return string
+    return "_".join(g.lower() for g in camel_to_snake_pattern.findall(string))
 
 
 def rgetattr(obj, attr, *args):
