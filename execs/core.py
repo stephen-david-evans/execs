@@ -14,11 +14,18 @@ def component(cls):
     return World.register(cls)
 
 
+def system(func):
+    """function decorator to register func as a system"""
+    World.add_system(func)
+    return func
+
+
 class World:
-    """Storage, tracker, and manipulator for all entities and components"""
+    """Storage, tracker, and manipulator for all entities, components, and systems"""
 
     components = {}
     entities = {}
+    systems = []
 
     def __repr__(self):
         return (
@@ -31,6 +38,17 @@ class World:
         """register a new component - called when decorating class with component"""
         cls.components[component] = set()
         return component
+
+    @classmethod
+    def add_system(cls, func):
+        """add system to storage"""
+        cls.systems.append(func)
+
+    @classmethod
+    def run_systems(cls):
+        """run all systems"""
+        for system in cls.systems:
+            system()
 
     @classmethod
     def add(cls, entity, component):
