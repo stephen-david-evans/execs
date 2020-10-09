@@ -1,7 +1,6 @@
 """Basic implementation of an Entity Component System
 """
 import uuid
-import inspect
 import itertools
 
 from . import utils
@@ -84,12 +83,19 @@ class World:
 
 
 class Entity:
+    """entity for storing components"""
+
     def __init__(self):
         self.uuid = uuid.uuid4().int
 
     def __repr__(self):
         components = (c for c in self.__dict__.values() if type(c) in World.components)
         return f"{type(self).__name__}(uuid={self.uuid}, components={tuple(components)})"
+
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            raise NotImplementedError(f"Equality of {self} ({type(self)}) and {other} ({type(other)})")
+        return self.uuid == other.uuid
 
     def attach(self, component):
         World.add(self, component)
